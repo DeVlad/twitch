@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
     // Project configuration.
     var pkg = require('./package.json');
+    require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         auto_install: {
@@ -20,7 +21,7 @@ module.exports = function (grunt) {
                 banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
             },
             build: {
-                src: 'src/js/*.js',
+                src: 'src/js/babel/*.js',
                 dest: 'build/js/<%= pkg.name %>.min.js'
             }
         },
@@ -83,6 +84,17 @@ module.exports = function (grunt) {
                 }
             }
         },
+        babel: {
+            options: {
+                sourceMap: true,
+                presets: ['babel-preset-es2015']
+            },
+            dist: {
+                files: {
+                    'src/js/babel/twitch.js': 'src/js/twitch.js'
+                }
+            }
+        },
         copy: {
             main: {
                 files: [
@@ -133,7 +145,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-gh-pages');
     // Deploy to Github pages
     grunt.registerTask('deploy', ['gh-pages']);
+    //grunt.loadNpmTasks('babel');
     // Default tasks
     //grunt.registerTask('default', ['auto_install', 'validation', 'uglify', 'postcss', 'processhtml', 'htmlmin', 'copy']);
-    //grunt.registerTask('default', ['auto_install', 'validation', 'uglify', 'postcss', 'processhtml', 'htmlmin']);
+    grunt.registerTask('default', ['auto_install', 'validation', 'babel', 'uglify', 'postcss', 'processhtml', 'htmlmin']);
 };
