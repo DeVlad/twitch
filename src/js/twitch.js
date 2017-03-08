@@ -5,7 +5,7 @@
 // Settings
 var channelUrl = "https://wind-bow.gomix.me/twitch-api/channels/";
 var streamUrl = "https://wind-bow.gomix.me/twitch-api/streams/";
-
+var isStreamingLive = "";
 // Yup it's hardcoded
 var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2"];
 
