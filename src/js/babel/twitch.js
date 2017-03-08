@@ -1,12 +1,17 @@
 "use strict";
 
-//var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
-// TODO: Missing chanells
+// -----------------------------------------------------------------------------------------
+// TODO: Missing channels
+// Be Aware - it's not real-time API for live streams !
+// -----------------------------------------------------------------------------------------
 // Settings
 var channelUrl = "https://wind-bow.gomix.me/twitch-api/channels/";
 var streamUrl = "https://wind-bow.gomix.me/twitch-api/streams/";
+
 // Yup it's hardcoded
 var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2"];
+
+//var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas"];
 // Ugly multiple api hits
 var _iteratorNormalCompletion = true;
 var _didIteratorError = false;
@@ -16,51 +21,37 @@ try {
     for (var _iterator = channels[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
         var channel = _step.value;
 
-        var promise = new Promise(function (resolve, reject) {
-            //console.log(json);        
+        var promiseGetChannel = new Promise(function (resolve, reject) {
+            //  console.log('channel ok');                
             resolve(fetch(channelUrl + channel).then(function (response) {
                 return response.json();
             }).then(function (json) {
-                return dataCollector.myData = json;
-            }, fetch(streamUrl + channel).then(function (response) {
+                return json;
+            }));
+            reject(Error("Error: fetch channel from API failed"));
+        });
+        var promiseGetStream = new Promise(function (resolve, reject) {
+            //console.log('stream ok');
+            resolve(fetch(streamUrl + channel).then(function (response) {
                 return response.json();
             }).then(function (json) {
-                return dataCollector.myData = json;
-            })));
-            reject(Error("Error: fetch API data failed"));
+                return json;
+            }));
+            reject(Error("Error: fetch stream from API failed"));
         });
-        promise.then(function () {
-            $(".content").append(renderResult(dataCollector.name, dataCollector.logo, dataCollector.url));
-        }, function (err) {
-            console.log(err); // Error
-        });
-        // Data Collector Object
-        var dataCollector = {
-            // Props are public
-            name: "",
-            logo: "",
-            url: "",
-            stream: "",
-            get myData() {
-                // For future use ?
-                return [this.name, this.logo, this.url, this.stream];
-            },
-            set myData(data) {
-                //console.log(data);            
-                if (data.hasOwnProperty("stream")) {
-                    if (data.stream !== null) {
-                        // Current stream
-                        this.stream = data.stream.channel.status;
-                    }
-                } else if (data.hasOwnProperty("display_name")) {
-                    this.name = data.display_name;
-                    this.logo = data.logo;
-                    this.url = data.url;
-                } else {
-                    console.log("Error: No data");
-                }
+        Promise.all([promiseGetChannel, promiseGetStream]).then(function (data) {
+            //console.log('Rendering data');
+            // console.log(data[0].display_name, data[0].logo, data[0].url);
+
+            if (data[1].stream === null) {
+                // console.log('not streaming');
+                isStreamingLive = "";
+            } else {
+                //  console.log(data[1].stream.channel.status);
+                isStreamingLive = data[1].stream.channel.status;
             }
-        };
+            $(".content").append(renderResult(data[0].display_name, data[0].logo, data[0].url, isStreamingLive));
+        });
     }
     // Render View
 } catch (err) {
@@ -78,8 +69,13 @@ try {
     }
 }
 
-function renderResult(name, logo, url) {
-    // Display in clickable div blocks    
-    return '<div class="result" id="' + name + '" onclick="window.open(' + "'" + url + "'" + ')">' + "<img src=" + "'" + logo + "'" + ">" + '<h3>' + name + '</h3>' + '<br>' + '</.div>';
+function renderResult(name, logo, url, stream) {
+    // Display in clickable div blocks
+    var streamClass = "offline";
+    if (stream !== "") {
+        streamClass = "live";
+    }
+
+    return '<div class="result" id="' + name + '" onclick="window.open(' + "'" + url + "'" + ')">' + "<img class='" + streamClass + "' src=" + "'" + logo + "'" + ">" + '<h3>' + name + '</h3>' + '<h2>' + stream + '</h2>' + '</.div>';
 }
 //# sourceMappingURL=twitch.js.map
