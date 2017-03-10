@@ -82,6 +82,6 @@ function renderResult(name, logo, url, stream) {
     if (stream !== "" || url == "#") {
         url == "#" ? streamClass = "dead" : streamClass = "live";
     }
-    return '<div class="result" id="' + name + '" onclick="window.open(' + "'" + url + "'" + ')">' + "<img class='" + streamClass + "' src=" + "'" + logo + "'" + ">" + '<h3>' + name + '</h3>' + '<h2>' + stream + '</h2>' + '</.div>';
+    return '<div class="result" id="' + name + '" onclick="window.open(' + "'" + url + "'" + ')">' + "<img class='" + streamClass + "' src=" + "'" + logo + "'" + ">" + '<h2>' + name + '</h2>' + '<h3>' + stream + '</h3>' + '</.div>';
 }
 //# sourceMappingURL=twitch.js.map

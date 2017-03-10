@@ -1,19 +1,31 @@
 /* Twitch APP Styles */
 
 body {
-    background-color:cornsilk;
-    
+    background-color: #1496bb;
+    color: white;
 }
-h1 {    
+
+.content {}
+
+h1 {
     text-align: center;
 }
 
+h3 {
+    margin-bottom: 2px;
+    border-bottom: 2px solid white;
+}
+
+h2 {
+    margin: 0;
+}
 
 img {
     border-radius: 50%;
     height: 64px;
     width: 64px;
     border: 2px solid white;
+    margin-top: 8px;
 }
 
 h3 {
@@ -28,18 +40,26 @@ div {
     flex-direction: column;
 }
 
-@keyframes borderBlink {    
-    from, to {    
-        border-color: white;    
-    }    
-    50% {    
-        border-color: #00D800;  
-    }    
-}    
-.borderBlink{    
-    border:2px solid white;
-    /* add 'border-color: transparent' if you wish no border to show initially */  
+@keyframes borderBlink {
+    from,
+    to {
+        border-color: white;
+    }
+    50% {
+        border-color: #00D800;
+    }
 }
+
+.borderBlink {
+    border: 2px solid white;
+    /* add 'border-color: transparent' if you wish no border to show initially */
+}
+
 .live {
-    animation: borderBlink 2s step-end infinite;    
+    animation: borderBlink 2s step-end infinite;
+}
+
+.dead {
+    border-left-color: crimson;
+    border-right-color: crimson;
 }
