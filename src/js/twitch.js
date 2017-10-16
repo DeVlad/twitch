@@ -5,6 +5,7 @@
 // Settings
 var channelUrl = "https://wind-bow.gomix.me/twitch-api/channels/";
 var streamUrl = "https://wind-bow.gomix.me/twitch-api/streams/";
+var proxy = "https://cors-anywhere.herokuapp.com/";
 var isStreamingLive = "";
 // Yup it's hardcoded
 //var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2"];
@@ -13,12 +14,12 @@ var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "habathcx"
 for (var channel of channels) {
     var promiseGetChannel = new Promise(function (resolve, reject) {
         //  console.log('channel ok');                
-        resolve(fetch(channelUrl + channel).then(response => response.json()).then(json => json));
+        resolve(fetch(proxy + channelUrl + channel).then(response => response.json()).then(json => json));
         reject(Error("Error: fetch channel from API failed"));
     });
     var promiseGetStream = new Promise(function (resolve, reject) {
         //console.log('stream ok');
-        resolve(fetch(streamUrl + channel).then(response => response.json()).then(json => json));
+        resolve(fetch(proxy + streamUrl + channel).then(response => response.json()).then(json => json));
         reject(Error("Error: fetch stream from API failed"));
     });
     Promise.all([promiseGetChannel, promiseGetStream]).then(function (data) {
